@@ -30,13 +30,18 @@ class TodoApp {
     
     async loadTodos() {
         try {
+            console.log('Loading todos...');
             const response = await fetch(this.apiUrl);
-            if (!response.ok) throw new Error('Failed to load todos');
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.details || 'Failed to load todos');
+            }
             this.todos = await response.json();
+            console.log(`Loaded ${this.todos.length} todos`);
             this.renderTodos();
         } catch (error) {
             console.error('Error loading todos:', error);
-            this.showNotification('Error loading todos', 'error');
+            this.showNotification(`Error loading todos: ${error.message}`, 'error');
         }
     }
     
@@ -123,18 +128,26 @@ class TodoApp {
     
     async clearCompleted() {
         try {
+            console.log('Clearing completed todos...');
             const response = await fetch(`${this.apiUrl}/clear-completed`, {
                 method: 'DELETE',
             });
             
-            if (!response.ok) throw new Error('Failed to clear completed todos');
+            const result = await response.json();
             
-            this.todos = this.todos.filter(t => !t.completed);
+            if (!response.ok) {
+                throw new Error(result.details || 'Failed to clear completed todos');
+            }
+            
+            console.log(`Cleared ${result.deletedCount} completed todos`);
+            
+            // Update the todos array by removing completed items
+            this.todos = this.todos.filter(todo => !todo.completed);
             this.renderTodos();
-            this.showNotification('Completed todos cleared', 'success');
+            this.showNotification(`Cleared ${result.deletedCount} completed todos`, 'success');
         } catch (error) {
             console.error('Error clearing completed todos:', error);
-            this.showNotification('Error clearing completed todos', 'error');
+            this.showNotification(`Error clearing completed todos: ${error.message}`, 'error');
         }
     }
     
