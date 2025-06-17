@@ -1,0 +1,25 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "A modern todo list application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"node server.js\" \"cd ../frontend && python3 -m http.server 8000\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["todo", "express", "mysql"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}
